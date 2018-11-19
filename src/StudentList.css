@@ -1,0 +1,11 @@
+
+.mandatory{
+	color: red;
+}
+
+.dividetds td{
+	width: 38% !important;
+}
+#main-container {
+	width: 80% !important;
+}
