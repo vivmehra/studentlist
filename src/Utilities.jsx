@@ -5,6 +5,6 @@ export const inputDataErrorMessageUtil = (name, score) =>{
     }else if(name === '' && score !== ''){
         return ErrorMessage = 'Please enter valid Student Name';
     }else if(name !== '' && score === '' || score < 0 || score > 100 || isNaN(score)){
-        return ErrorMessage = 'Please eneter valid score';
+        return ErrorMessage = 'Please enter valid score';
 }
 }
