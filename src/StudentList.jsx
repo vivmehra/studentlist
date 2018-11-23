@@ -5,6 +5,7 @@ import React, { Component } from 'react';
 import './StudentList.css';
 import StudentItem from './StudentItem';
 import ErrorMessage from './ErrorMessage';
+import {inputDataErrorMessageUtil} from './Utilities'
 
 export default class StudentList extends Component {
 	constructor(props) {
@@ -13,6 +14,8 @@ export default class StudentList extends Component {
 			studentsList: [],
 			isInvalid: 0
 		};
+		this.name = '';
+		this.score = '';
 	}
     /*  Function to calculate min max and average values of the class */
 	calculateSummaryData = () => {
@@ -41,9 +44,15 @@ export default class StudentList extends Component {
 			this.score = e.target.value.trim() === '' ? '' : e.target.value;
 		}
 	};
+	/* Function to Set the Corresponding Error Message*/
+	inputDataErrorMessage = (name, score) =>{
+		this.ErrorMessage = inputDataErrorMessageUtil(name,score);
+	}
+
 	/*  Function to Add corresponding student data in state */
 	addStudent = (e) => {
 		if (this.name === '' || this.score === '' || this.score < 0 || this.score > 100 || isNaN(this.score)) {
+			this.inputDataErrorMessage(this.name,this.score);
 			this.setState({
 				isInvalid: 1
 			});
@@ -67,24 +76,16 @@ export default class StudentList extends Component {
 	/*Function to handle update event triggered from child component(StudentLit)
 	 and update the correspodnig student data in state */
 	updateClick = (key, name, score) => {
-		if (name === '' || score === '' || score < 0 || score > 100 || isNaN(score)) {
-			this.setState({
-				isInvalid: 1
-			});
-			return;
-		}else{
 			const studentsList = this.state.studentsList;
 			studentsList[key] = {
 				studentName: name,
-				score: score
+				score: Number(score)
 			};
 			this.setState({
 				studentsList: studentsList,
 				isInvalid: 0
 			});
-			this.calculateSummaryData();
-		}
-			
+			this.calculateSummaryData();			
 	};
 /* Function to add student on enterkey stroke*/
 	handleKeyPress(e) {
@@ -103,7 +104,7 @@ export default class StudentList extends Component {
 		return (
 			<div className="container-fluid mt-2" id='main-container'>
 			{/* Add Student Section */}
-			{this.state.isInvalid === 1 && <ErrorMessage message='Please enter valid data'/>}
+			{this.state.isInvalid === 1 && <ErrorMessage message={this.ErrorMessage}/>}
 				<form className="form-inline p-3" id='addStudent'>
 					<div className="form-group mb-2">
 						<label htmlFor="sname" className="m-2">
@@ -113,12 +114,13 @@ export default class StudentList extends Component {
 							type="text"
 							id="sname"
 							className="form-control"
-							placeholder="Student Name"
+							placeholder="Upto 40 Chars"
 							onChange={(e) => this.onChangeHandler(e)}
 							onKeyPress={(e) => this.handleKeyPress(e)}
 							ref={(input) => {
 								this.studentNameField = input;
 							}}
+							maxLength = '40'
 						/>
 					</div>
 					<div className="form-group mx-sm-3 mb-2">
@@ -184,7 +186,8 @@ export default class StudentList extends Component {
 						...student,
 						key: index,
 						onDeleteClick: this.onDeleteClick,
-						updateClick: this.updateClick
+						updateClick: this.updateClick,
+						validateInputData: this.validateInputData
 					};
 					return (
 						<div className="container-fluid" key="index">

@@ -2,12 +2,15 @@
 pass control to parent component for edit, delete and update functionalities*/
 import React, { Component } from 'react';
 import './StudentList.css';
+import ErrorMessage from './ErrorMessage';
+import {inputDataErrorMessageUtil} from './Utilities'
 
 export default class StudentItem extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			isEditClicked: false
+			isEditClicked: false,
+			isInvalid: 0
 		};
 		this.name = this.props.studentData.studentName;
 		this.score = this.props.studentData.score;
@@ -23,17 +26,18 @@ export default class StudentItem extends Component {
 	};
 	/*Check validation and pass data to parent to edit the state */
 	updateClick = () => {
-		// if (this.name === '' || this.score === '' || this.score < 0 || this.score > 100 || isNaN(this.score)) {
-		// 	alert('Please enter valid data');
-		// 	this.setState({
-		// 		isEditClicked: false
-		// 	});
-		// 	return;
-		// }
+		if (this.name === '' || this.score === '' || this.score < 0 || this.score > 100 || isNaN(this.score)) {
+			this.inputDataErrorMessage(this.name,this.score);
+			this.setState({
+				isInvalid: 1
+			});
+			return;
+		}
 
 		this.props.studentData.updateClick(this.props.studentData.key, this.name, this.score);
 		this.setState({
-			isEditClicked: false
+			isEditClicked: false,
+			isInvalid: 0
 		});
 	};
 
@@ -44,7 +48,10 @@ export default class StudentItem extends Component {
 			this.score = e.target.value.trim() === '' ? '' : e.target.value;
 		}
 	};
-
+	inputDataErrorMessage = (name, score) =>{
+		this.ErrorMessage = inputDataErrorMessageUtil(name,score);
+	
+}
 	render() {
 		const studentData = this.props.studentData;
 		let divElement = '';
@@ -94,6 +101,7 @@ export default class StudentItem extends Component {
 							ref={(input) => {
 								this.studentNameField = input;
 							}}
+							maxLength = '40'
 						/>
 							</td>
 							<td>
@@ -106,12 +114,19 @@ export default class StudentItem extends Component {
 							ref={(input) => {
 								this.scoreField = input;
 							}}
+							maxLength = '3'
 						/>
 							</td>
 							<td>
 								<button type="button" className="btn btn-primary" onClick={(e) => this.updateClick(e)}>Update</button>	
 							</td>
 						</tr>
+						{this.state.isInvalid === 1  && 
+						<tr>
+							<td colSpan = '3'>
+							<small><ErrorMessage message={this.ErrorMessage}/></small>
+							</td> 
+						</tr>}
 					</tbody>
 					</table>
 				</form>
