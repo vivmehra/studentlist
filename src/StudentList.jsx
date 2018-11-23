@@ -137,6 +137,7 @@ export default class StudentList extends Component {
 							ref={(input) => {
 								this.scoreField = input;
 							}}
+							maxLength = '3'
 						/>
 					</div>
 					<button type="button" onClick={(e) => this.addStudent(e)} className="btn btn-success mb-2">
