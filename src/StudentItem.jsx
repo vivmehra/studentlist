@@ -2,7 +2,6 @@
 pass control to parent component for edit, delete and update functionalities*/
 import React, { Component } from 'react';
 import './StudentList.css';
-import ErrorMessage from './ErrorMessage';
 import {inputDataErrorMessageUtil} from './Utilities'
 import TableRowView from './TableRowView';
 import TableRowEdit from './TableRowEdit';
@@ -58,7 +57,6 @@ export default class StudentItem extends Component {
 	render() {
 		const studentData = this.props.studentData;
 		let divElement = '';
-		let fail = null;
 		const rowViewProps = {
 			studentData: studentData,
 			onDeleteClick  : this.onDeleteClick,
