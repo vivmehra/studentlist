@@ -7,6 +7,7 @@ import StudentItem from './StudentItem';
 import ErrorMessage from './ErrorMessage';
 import {inputDataErrorMessageUtil, calculateSummaryDataUtil} from './Utilities'
 import ClassSummary from './ClassSummary';
+import TableHeader from './TableHeader';
 
 export default class StudentList extends Component {
 	constructor(props) {
@@ -164,20 +165,9 @@ export default class StudentList extends Component {
 				{/* Summary section to be shown only if there is some data in students array */}
 				{studentsList.length > 0 && <ClassSummary data={summaryProps} />}
 				
-				{studentsList.length > 0 && (
-					<div className="mt-4">
-						<h6 className="font-weight-bold">Student List</h6>
-						<table className="table">
-							<thead>
-								<tr>
-									<th>Student Name</th>
-									<th>Marks Obtained</th>
-									<th>Actions</th>
-								</tr>
-							</thead>
-						</table>
-					</div>
-				)}
+				{/* Table Header*/}
+				{studentsList.length > 0 && <TableHeader />}
+
 				{/* Iteratively Calling StudentItem component to add each row for the students array */}
 				{studentsList.map((student, index) => {
 					studentData = {
