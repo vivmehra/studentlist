@@ -4,6 +4,8 @@ import React, { Component } from 'react';
 import './StudentList.css';
 import ErrorMessage from './ErrorMessage';
 import {inputDataErrorMessageUtil} from './Utilities'
+import TableRowView from './TableRowView';
+import TableRowEdit from './TableRowEdit';
 
 export default class StudentItem extends Component {
 	constructor(props) {
@@ -42,10 +44,11 @@ export default class StudentItem extends Component {
 	};
 
 	onChangeHandler = (e) => {
+		let value = e.target.value.trim();
 		if (e.target.id === 'sname') {
-			this.name = e.target.value.trim() === '' ? '' : e.target.value;
+			this.name = value === '' ? '' : value;
 		} else {
-			this.score = e.target.value.trim() === '' ? '' : e.target.value;
+			this.score = value === '' ? '' : value;
 		}
 	};
 	inputDataErrorMessage = (name, score) =>{
@@ -56,80 +59,24 @@ export default class StudentItem extends Component {
 		const studentData = this.props.studentData;
 		let divElement = '';
 		let fail = null;
-		if (studentData.score < 65) {
-			fail = {
-				backgroundColor: '#f8d7da'
-			};
+		const rowViewProps = {
+			studentData: studentData,
+			onDeleteClick  : this.onDeleteClick,
+			onEditClick: this.onEditClick
+
+		}
+		const rowEditProps = {
+			studentData: studentData,
+			onChangeHandler: this.onChangeHandler,
+			updateClick : this.updateClick,
+			message: this.ErrorMessage,
+			isInvalid: this.state.isInvalid
 		}
 		if (!this.state.isEditClicked) {
-			divElement = (
-				<table className="table">
-					<tbody>
-						<tr style={fail} className="dividetds">
-							<td>
-								{studentData.studentName}
-							</td>
-							<td>
-								{studentData.score}
-							</td>
-							<td>
-								<span onClick={this.onDeleteClick} className="p-4">
-									<i className="fas fa-trash fa-2x" title="Delete" />
-								</span>
-								<span onClick={this.onEditClick}>
-									<i className="fas fa-edit fa-2x" title="Edit" />
-								</span>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			);
+			divElement = ( <TableRowView data={rowViewProps} /> );
 		}
 		if (this.state.isEditClicked) {
-			divElement = (
-				<form className="form-group">
-					<table className="table">
-					<tbody>
-						<tr className="dividetds">
-							<td>
-							<input
-							type="text"
-							id="sname"
-							className="form-control"
-							defaultValue={this.props.studentData.studentName}
-							onChange={(e) => this.onChangeHandler(e)}
-							ref={(input) => {
-								this.studentNameField = input;
-							}}
-							maxLength = '255'
-						/>
-							</td>
-							<td>
-							<input
-							type="text"
-							id="score"
-							className="form-control"
-							defaultValue={this.props.studentData.score}
-							onChange={(e) => this.onChangeHandler(e)}
-							ref={(input) => {
-								this.scoreField = input;
-							}}
-							maxLength = '5'
-						/>
-							</td>
-							<td>
-								<button type="button" className="btn btn-primary" onClick={(e) => this.updateClick(e)}>Update</button>	
-							</td>
-						</tr>
-						{this.state.isInvalid === 1  && 
-						<tr>
-							<td colSpan = '3'>
-							<small><ErrorMessage message={this.ErrorMessage}/></small>
-							</td> 
-						</tr>}
-					</tbody>
-					</table>
-				</form>
+			divElement = ( <TableRowEdit data = {rowEditProps} />
 			);
 		}
 		return <div>{divElement}</div>;

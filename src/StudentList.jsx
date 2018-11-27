@@ -20,8 +20,8 @@ export default class StudentList extends Component {
 		this.score = '';
 	}
     /*  Function calling util function to get min max and avg value */
-	calculateSummaryData = () => {
-		let summaryData = calculateSummaryDataUtil(this.state.studentsList);
+	calculateSummaryData = (studentList) => {
+		let summaryData = calculateSummaryDataUtil(studentList);
 		this.min = summaryData.min;
 		this.max = summaryData.max;
 		this.avg = summaryData.avg;
@@ -29,19 +29,20 @@ export default class StudentList extends Component {
 
 	/*  Function to delete corresponding student data, data passed by child component*/
 	onDeleteClick = (index) => {
-		let studentsList = this.state.studentsList;
+		let studentsList = [...this.state.studentsList];
 		studentsList.splice(index, 1);
 		this.setState({
 			studentsList: studentsList
 		});
-		this.calculateSummaryData();
+		this.calculateSummaryData(studentsList);
 	};
 	/* Function to fetch the values: name and score, on onChange event */ 
 	onChangeHandler = (e) => {
+		let value = e.target.value.trim();
 		if (e.target.id === 'sname') {
-			this.name = e.target.value.trim() === '' ? '' : e.target.value;
+			this.name = value === '' ? '' : value;
 		} else {
-			this.score = e.target.value.trim() === '' ? '' : e.target.value;
+			this.score = value === '' ? '' :value;
 		}
 	};
 	/* Function to Set the Corresponding Error Message*/
@@ -62,7 +63,8 @@ export default class StudentList extends Component {
 				studentName: this.name,
 				score: Number(this.score)
 			};
-			let studentsList = this.state.studentsList;
+			let studentsList = [...this.state.studentsList];
+			
 			let duplicateStudents = studentsList.filter((student)=>{
 				return student.studentName === this.name;
 			})
@@ -72,10 +74,10 @@ export default class StudentList extends Component {
 					studentsList: studentsList,
 					isInvalid: 0
 				});
-				this.calculateSummaryData();
+				this.calculateSummaryData(studentsList);
 				this.name = this.score = this.studentNameField.value = this.scoreField.value = '';
 			}else{
-				this.ErrorMessage = 'Student with this name already exists';
+				this.ErrorMessage = `Student with name '${this.name}' already exists`;
 				this.setState({
 					isInvalid: 1
 				});
@@ -88,7 +90,7 @@ export default class StudentList extends Component {
 	/*Function to handle update event triggered from child component(StudentLit)
 	 and update the correspodnig student data in state */
 	updateClick = (key, name, score) => {
-			const studentsList = this.state.studentsList;
+			const studentsList = [...this.state.studentsList];
 			studentsList[key] = {
 				studentName: name,
 				score: Number(score)
@@ -97,7 +99,7 @@ export default class StudentList extends Component {
 				studentsList: studentsList,
 				isInvalid: 0
 			});
-			this.calculateSummaryData();			
+			this.calculateSummaryData(studentsList);			
 	};
 /* Function to add student on enterkey stroke*/
 	handleKeyPress(e) {
@@ -111,7 +113,7 @@ export default class StudentList extends Component {
 		}
 	}
 	render() {
-		const studentsList = this.state.studentsList;
+		const studentsList = [...this.state.studentsList];
 		let studentData = '';
 		const summaryProps = {
 			min: this.min,
