@@ -5,7 +5,8 @@ import React, { Component } from 'react';
 import './StudentList.css';
 import StudentItem from './StudentItem';
 import ErrorMessage from './ErrorMessage';
-import {inputDataErrorMessageUtil} from './Utilities'
+import {inputDataErrorMessageUtil, calculateSummaryDataUtil} from './Utilities'
+import ClassSummary from './ClassSummary';
 
 export default class StudentList extends Component {
 	constructor(props) {
@@ -17,14 +18,12 @@ export default class StudentList extends Component {
 		this.name = '';
 		this.score = '';
 	}
-    /*  Function to calculate min max and average values of the class */
+    /*  Function calling util function to get min max and avg value */
 	calculateSummaryData = () => {
-		let studentsList = this.state.studentsList;
-		let scoreArray = '';
-		scoreArray = studentsList.map((student) => Number(student.score));
-		this.min = Math.min(...scoreArray);
-		this.max = Math.max(...scoreArray);
-		this.avg = +(scoreArray.reduce((a, b) => Number(a) + Number(b), 0) / studentsList.length).toFixed(2);
+		let summaryData = calculateSummaryDataUtil(this.state.studentsList);
+		this.min = summaryData.min;
+		this.max = summaryData.max;
+		this.avg = summaryData.avg;
 	};
 
 	/*  Function to delete corresponding student data, data passed by child component*/
@@ -66,7 +65,7 @@ export default class StudentList extends Component {
 			let duplicateStudents = studentsList.filter((student)=>{
 				return student.studentName === this.name;
 			})
-			if(duplicateStudents.length==0){
+			if(duplicateStudents.length === 0){
 				studentsList.push(studentData);
 				this.setState({
 					studentsList: studentsList,
@@ -113,6 +112,11 @@ export default class StudentList extends Component {
 	render() {
 		const studentsList = this.state.studentsList;
 		let studentData = '';
+		const summaryProps = {
+			min: this.min,
+			max: this.max,
+			avg: this.avg
+		};
 		return (
 			<div className="container-fluid mt-2" id='main-container'>
 			{/* Add Student Section */}
@@ -158,27 +162,8 @@ export default class StudentList extends Component {
 				</form>
 				<hr/>
 				{/* Summary section to be shown only if there is some data in students array */}
-				{studentsList.length > 0 && (
-					<div>
-						<h6 className="font-weight-bold">Class performance</h6>
-						<hr/>
-						<div className="row">
-							<div className="col-md-4">
-								<h6>Min Grade</h6>
-								<p>{this.min}</p>
-							</div>
-							<div className="col-md-4">
-								<h6>Max Grade</h6>
-								<p>{this.max}</p>
-							</div>
-							<div className="col-md-4">
-								<h6>Average Grade</h6>
-								<p>{this.avg}</p>
-							</div>
-						</div>
-						<hr/>
-					</div>
-				)}
+				{studentsList.length > 0 && <ClassSummary data={summaryProps} />}
+				
 				{studentsList.length > 0 && (
 					<div className="mt-4">
 						<h6 className="font-weight-bold">Student List</h6>
