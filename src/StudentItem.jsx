@@ -101,7 +101,7 @@ export default class StudentItem extends Component {
 							ref={(input) => {
 								this.studentNameField = input;
 							}}
-							maxLength = '40'
+							maxLength = '255'
 						/>
 							</td>
 							<td>
@@ -114,7 +114,7 @@ export default class StudentItem extends Component {
 							ref={(input) => {
 								this.scoreField = input;
 							}}
-							maxLength = '3'
+							maxLength = '5'
 						/>
 							</td>
 							<td>

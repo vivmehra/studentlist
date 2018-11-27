@@ -5,6 +5,7 @@
 
 .dividetds td{
 	width: 38% !important;
+	word-break: break-all;
 }
 #main-container {
 	width: 80% !important;

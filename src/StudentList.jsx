@@ -114,13 +114,13 @@ export default class StudentList extends Component {
 							type="text"
 							id="sname"
 							className="form-control"
-							placeholder="Upto 40 Chars"
+							placeholder="Enter Student Name"
 							onChange={(e) => this.onChangeHandler(e)}
 							onKeyPress={(e) => this.handleKeyPress(e)}
 							ref={(input) => {
 								this.studentNameField = input;
 							}}
-							maxLength = '40'
+							maxLength = '255'
 						/>
 					</div>
 					<div className="form-group mx-sm-3 mb-2">
@@ -137,7 +137,7 @@ export default class StudentList extends Component {
 							ref={(input) => {
 								this.scoreField = input;
 							}}
-							maxLength = '3'
+							maxLength = '5'
 						/>
 					</div>
 					<button type="button" onClick={(e) => this.addStudent(e)} className="btn btn-success mb-2">
