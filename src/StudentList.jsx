@@ -63,13 +63,25 @@ export default class StudentList extends Component {
 				score: Number(this.score)
 			};
 			let studentsList = this.state.studentsList;
-			studentsList.push(studentData);
-			this.setState({
-				studentsList: studentsList,
-				isInvalid: 0
-			});
-			this.calculateSummaryData();
-			this.name = this.score = this.studentNameField.value = this.scoreField.value = '';	
+			let duplicateStudents = studentsList.filter((student)=>{
+				return student.studentName === this.name;
+			})
+			if(duplicateStudents.length==0){
+				studentsList.push(studentData);
+				this.setState({
+					studentsList: studentsList,
+					isInvalid: 0
+				});
+				this.calculateSummaryData();
+				this.name = this.score = this.studentNameField.value = this.scoreField.value = '';
+			}else{
+				this.ErrorMessage = 'Student with this name already exists';
+				this.setState({
+					isInvalid: 1
+				});
+				return;
+			}
+				
 		}
 	};
 
