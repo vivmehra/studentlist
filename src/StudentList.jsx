@@ -20,8 +20,8 @@ export default class StudentList extends Component {
 		this.score = '';
 	}
     /*  Function calling util function to get min max and avg value */
-	calculateSummaryData = (studentList) => {
-		let summaryData = calculateSummaryDataUtil(studentList);
+	calculateSummaryData = (studentsList) => {
+		let summaryData = calculateSummaryDataUtil(studentsList);
 		this.min = summaryData.min;
 		this.max = summaryData.max;
 		this.avg = summaryData.avg;
@@ -177,7 +177,8 @@ export default class StudentList extends Component {
 						key: index,
 						onDeleteClick: this.onDeleteClick,
 						updateClick: this.updateClick,
-						validateInputData: this.validateInputData
+						validateInputData: this.validateInputData,
+						studentsList: studentsList
 					};
 					return (
 						<div className="container-fluid" key="index">

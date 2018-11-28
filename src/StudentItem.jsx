@@ -26,30 +26,45 @@ export default class StudentItem extends Component {
 		});
 	};
 	/*Check validation and pass data to parent to edit the state */
-	updateClick = () => {
-		if (this.name === '' || this.score === '' || this.score < 0 || this.score > 100 || isNaN(this.score)) {
-			this.inputDataErrorMessage(this.name,this.score);
-			this.setState({
-				isInvalid: 1
-			});
-			return;
-		}
-
-		this.props.studentData.updateClick(this.props.studentData.key, this.name, this.score);
-		this.setState({
-			isEditClicked: false,
-			isInvalid: 0
-		});
+	updateClick = (e, name, score) => {
+			if (name === '' || score === '' || score < 0 || score > 100 || isNaN(score)) {
+				this.inputDataErrorMessage(name,score);
+				this.setState({
+					isInvalid: 1
+				});
+				return;
+			}
+			let studentsList = this.props.studentData.studentsList;
+			let indexOfStudent = '';
+			let isExist = false;
+			
+			for(var i=0; i<studentsList.length; i++){
+				if(studentsList[i].studentName === this.props.studentData.studentName)
+				indexOfStudent = i;
+			}
+			for(var j= 0 ; j<studentsList.length; j++){
+				if(j!==indexOfStudent){
+					if(studentsList[j].studentName === name){
+						isExist = true;
+						break;
+					}
+				}
+			}
+			if(isExist){
+				this.ErrorMessage = `Student with name '${name}' already exists`;
+					this.setState({
+						isInvalid: 1
+					});
+					return;
+			}else{
+				this.props.studentData.updateClick(this.props.studentData.key, name, score);
+				this.setState({
+				isEditClicked: false,
+				isInvalid: 0
+				});
+			}
 	};
 
-	onChangeHandler = (e) => {
-		let value = e.target.value.trim();
-		if (e.target.id === 'sname') {
-			this.name = value === '' ? '' : value;
-		} else {
-			this.score = value === '' ? '' : value;
-		}
-	};
 	inputDataErrorMessage = (name, score) =>{
 		this.ErrorMessage = inputDataErrorMessageUtil(name,score);
 	

@@ -10,25 +10,23 @@ const TableRowEdit = ((props)=>{
 							<td>
 							<input
 							type="text"
-							id="sname"
+							id="sname_edit"
 							className="form-control"
 							defaultValue={props.data.studentData.studentName}
-							onChange={(e) => props.data.onChangeHandler(e)}
 							maxLength = '255'
 						/>
 							</td>
 							<td>
 							<input
 							type="text"
-							id="score"
+							id="score_edit"
 							className="form-control"
 							defaultValue={props.data.studentData.score}
-							onChange={(e) => props.data.onChangeHandler(e)}
 							maxLength = '5'
 						/>
 							</td>
 							<td>
-								<button type="button" className="btn btn-primary" onClick={(e) => props.data.updateClick(e)}>Update</button>	
+								<button type="button" className="btn btn-primary" onClick={(e) => props.data.updateClick(e,document.getElementById('sname_edit').value.trim(),document.getElementById('score_edit').value.trim())}>Update</button>	
 							</td>
 						</tr>
 						{props.data.isInvalid === 1  && 
